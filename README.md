@@ -1,5 +1,8 @@
-add to environments
+# overview
+These commands assist AOSP source code development
 
-[~/.bashrc]
+# modify ~/.bashrc
+```
 AOSP_TOOLS=~/aosp_tools
 PATH=$PATH:$AOSP_TOOLS
+```
