@@ -6,6 +6,7 @@ if [ ! -z $OUT ]; then
 	rm $OUT/system $OUT/data $OUT/rootdir -rf
 
 	# make
+	make update-api
 	time make -j16
 else
 	echo 'OUT is empty!'
