@@ -8,4 +8,5 @@ cibn
 aosp_persimmon_isdb-userdebug
 EOF
 
-build.sh
+make update-api
+time make -j16
