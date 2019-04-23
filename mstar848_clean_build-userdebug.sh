@@ -19,10 +19,10 @@ else
   exit 2
 fi
 
-repo init -u athenar:mstar/6A848/platform/manifest.git -b master -m letv/JASON.xml --repo-url=athenar:tools/repo.git --no-repo-verify
-repo sync --no-tags -cdj4
-
 cd $DIR
+/home/thomas/bin/repo init -u athenar:mstar/6A848/platform/manifest.git -b master -m letv/JASON.xml --repo-url=athenar:tools/repo.git --no-repo-verify
+.repo/repo/repo sync --no-tags -cdj4
+
 source build/envsetup.sh
 lunch <<EOF
 cibn
