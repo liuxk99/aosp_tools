@@ -72,7 +72,11 @@ def format_line(line):
 def format_file(log_file, out_file):
     print "format_file('%s', '%s')" % (log_file, out_file)
     if not os.path.isfile(log_file):
-        print "'%s' doesn't exist!" % log_file
+        print "log_file('%s') doesn't exist! Try abs path." % log_file
+        return
+
+    if not os.path.isfile(log_file):
+        print "(out_file)'%s' doesn't exist! Try abs path." % out_file
         return
 
     out_bash = codecs.open(out_file, 'w', 'utf-8-sig')
@@ -93,8 +97,8 @@ def format_file(log_file, out_file):
 
 
 # if not called as a module
-def help():
-    print "-i $log_file -o $out_sh"
+def help(cmd):
+    print "%s -i $log_file -o $out_sh" % cmd
     sys.exit(1)
 
     pass
@@ -102,16 +106,17 @@ def help():
 
 if __name__ == '__main__':
     # sys.setdefaultencoding('utf8')
+    exec_cmd = sys.argv[0]
 
     if len(sys.argv) < 2:
-        help()
+        help(exec_cmd)
 
     # parse parameters
     try:
         opts, args = getopt.getopt(sys.argv[1:], "i:o:", ["help"])
     except getopt.GetoptError:
         print("syntax error")
-        help()
+        help(exec_cmd)
 
     log_file = None
     out_file = None
@@ -123,7 +128,11 @@ if __name__ == '__main__':
         elif cmd in '-i':
             log_file = arg
         elif cmd in '--help':
-            help()
+            help(exec_cmd)
+
+    if log_file is None or out_file is None:
+        print("syntax error")
+        help(exec_cmd)
 
     format_file(log_file, out_file)
     pass
