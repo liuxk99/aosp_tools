@@ -14,7 +14,7 @@
 import re
 
 
-def replace(subject, pat, repl):
+def reg_replace(subject, pat, repl):
     u_subject = unicode(subject)
     u_pat = unicode(pat)
     u_repl = unicode(repl)
@@ -42,14 +42,24 @@ progress_repl = r"# \1\n" + bash_prefix
 arg_pattern = r"(\s+\-[\-\w]+)"
 arg_repl = r" \\\n\1"
 
-OP_match = r"&&\|||\|"
-OP_replace = r" \n\1"
+op_pat = r"(&&|\|\|)"
+op_repl = r"\\\n\1"
 
 
-def parse_line(line):
-    text1, num1 = replace(line, progress_pat, progress_repl)
+def format_line(line):
+    text = line
+
+    text1, num1 = reg_replace(line, progress_pat, progress_repl)
     if text1:
-        text2, num2 = replace(text1, arg_pattern, arg_repl)
-        if text2:
-            print text2
+        text = text1
+
+    text2, num2 = reg_replace(text, op_pat, op_repl)
+    if text2:
+        text = text2
+
+    text3, num3 = reg_replace(text, arg_pattern, arg_repl)
+    if text3:
+        text = text3
+
+    return text
     pass
