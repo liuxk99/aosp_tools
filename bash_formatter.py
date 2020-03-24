@@ -11,14 +11,18 @@
 # Licence:     <your licence>
 # coding=utf-8
 # -------------------------------------------------------------------------------
+import codecs
+import getopt
+import os
 import re
+import sys
 
 
 def reg_replace(subject, pat, repl):
     u_subject = unicode(subject)
     u_pat = unicode(pat)
     u_repl = unicode(repl)
-    print "=> replace('%s', \n'%s', \n'%s')" % (u_subject, u_pat, u_repl)
+    # print "=> replace('%s', \n'%s', \n'%s')" % (u_subject, u_pat, u_repl)
 
     new_subject = None
     num = 0
@@ -62,4 +66,64 @@ def format_line(line):
         text = text3
 
     return text
+    pass
+
+
+def format_file(log_file, out_file):
+    print "format_file('%s', '%s')" % (log_file, out_file)
+    if not os.path.isfile(log_file):
+        print "'%s' doesn't exist!" % log_file
+        return
+
+    out_bash = codecs.open(out_file, 'w', 'utf-8-sig')
+
+    with open(log_file) as in_file:
+        for line in in_file:
+            m = re.match(progress_pat, line)
+            if m:
+                new_line = format_line(line)
+            else:
+                new_line = "# " + line
+
+            out_bash.write(new_line.decode('utf-8'))
+        pass
+
+    out_bash.close()
+    pass
+
+
+# if not called as a module
+def help():
+    print "-i $log_file -o $out_sh"
+    sys.exit(1)
+
+    pass
+
+
+if __name__ == '__main__':
+    # sys.setdefaultencoding('utf8')
+
+    if len(sys.argv) < 2:
+        help()
+
+    # parse parameters
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "i:o:", ["help"])
+    except getopt.GetoptError:
+        print("syntax error")
+        help()
+
+    log_file = None
+    out_file = None
+    # print opts
+    # print args
+    for cmd, arg in opts:
+        if cmd in '-o':
+            out_file = arg
+        elif cmd in '-i':
+            log_file = arg
+        elif cmd in '--help':
+            help()
+
+    format_file(log_file, out_file)
     pass
